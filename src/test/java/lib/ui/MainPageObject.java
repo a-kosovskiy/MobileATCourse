@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
+
 public class MainPageObject {
 
     protected AppiumDriver driver;
@@ -98,6 +100,11 @@ public class MainPageObject {
         if (elementsAmount > 0) {
             throw new AssertionError(defaultMessage + " " + errorMessage);
         }
+    }
+
+    public void assertElementPresent(By by, String errorMessage) {
+        List elements = driver.findElements(by);
+        assertTrue(errorMessage, elements.size() > 0);
     }
 
     public String waitForElementAndGetAttribute(By by, String attribute, String errorMessage, long timeoutInSeconds) {

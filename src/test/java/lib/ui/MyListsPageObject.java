@@ -33,4 +33,10 @@ public class MyListsPageObject extends MainPageObject {
                 "Saved article still present with title " + articleTitle,
                 15);
     }
+
+    public void clickByArticleWithTitle(String articleTitle) {
+        this.waitForElementAndClick(By.xpath(getSavedArticleXpathByTitle(articleTitle)),
+                "Cannot open article",
+                5);
+    }
 }

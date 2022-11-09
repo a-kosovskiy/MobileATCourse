@@ -21,7 +21,7 @@ public class MyListsTests extends CoreTestCase {
 
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
         articlePageObject.waitForTitleElement();
-        articlePageObject.addArticleToMyList(listName);
+        articlePageObject.addArticleToNewList(listName);
 
         NavigationUI navigationUI = new NavigationUI(driver);
         navigationUI.viewList();

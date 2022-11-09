@@ -1,4 +1,4 @@
-package lesson2.tests;
+package tests;
 
 import lib.CoreTestCase;
 import org.junit.Assert;

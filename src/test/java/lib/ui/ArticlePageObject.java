@@ -32,7 +32,7 @@ public class ArticlePageObject extends MainPageObject {
         return titleElement.getAttribute("name");
     }
 
-    public void addArticleToMyList(String listName) {
+    public void addArticleToNewList(String listName) {
         this.waitForElementAndClick(By.xpath(SAVE_BUTTON),
                 "Cannot find 'Save' button",
                 5);
@@ -48,5 +48,23 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(By.xpath(MY_LIST_OK_BUTTON),
                 "Cannot find 'OK' button",
                 5);
+    }
+
+    public void addArticleToList(String listName) {
+        this.waitForElementAndClick(By.xpath(SAVE_BUTTON),
+                "Cannot find 'Save' button",
+                5);
+
+        this.waitForElementAndClick(By.xpath(ADD_TO_MY_LIST_BUTTON),
+                "Cannot find 'Add to list' button",
+                5);
+
+        this.waitForElementAndClick(By.xpath("//*[@text = '" + listName + "']"),
+                "Cannot find list button",
+                5);
+    }
+
+    public void assertTitlePresent() {
+        this.assertElementPresent(By.xpath(TITLE_ELEMENT), "Cannot find title element");
     }
 }
