@@ -2,6 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
+import lib.ui.WelcomePageObject;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ public class Ex3 extends CoreTestCase {
     @Test
     public void testFindResultsAndClearSearch() {
         String searchLine = "Selenium";
-        mainPageObject.clickSkipButton();
+        new WelcomePageObject(driver).clickSkipButton();
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);

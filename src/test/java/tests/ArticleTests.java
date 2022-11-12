@@ -3,13 +3,14 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.WelcomePageObject;
 import org.junit.Test;
 
 public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCompareArticleTitle() {
-        mainPageObject.clickSkipButton();
+        new WelcomePageObject(driver).clickSkipButton();
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -23,7 +24,7 @@ public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testSwipeArticle() {
-        mainPageObject.clickSkipButton();
+        new WelcomePageObject(driver).clickSkipButton();
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Appium");

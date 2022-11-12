@@ -1,10 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
@@ -13,7 +10,7 @@ public class MyListsTests extends CoreTestCase {
     public void testSaveFirstArticleToMyList() {
         String articleTitle = "Java (programming language)";
         String listName = "Learning programming";
-        mainPageObject.clickSkipButton();
+        new WelcomePageObject(driver).clickSkipButton();
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");

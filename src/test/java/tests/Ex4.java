@@ -1,6 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.ui.WelcomePageObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -15,11 +16,11 @@ public class Ex4 extends CoreTestCase {
     @Test
     public void testFindWordInSearchResults() {
         String searchText = "Java";
-        mainPageObject.clickSkipButton();
-        mainPageObject.waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
+        new WelcomePageObject(driver).clickSkipButton();
+        mainPageObject.waitForElementAndClick("id:org.wikipedia:id/search_container",
                 "Cannot find init search field",
                 5);
-        mainPageObject.waitForElementAndSendKeys(By.xpath("//*[@text='Search Wikipedia']"), searchText,
+        mainPageObject.waitForElementAndSendKeys("xpath://*[@text='Search Wikipedia']", searchText,
                 "Cannot find search input",
                 5);
         List<WebElement> searchResults = waitForAllElementsPresent(By.id("org.wikipedia:id/page_list_item_title"),

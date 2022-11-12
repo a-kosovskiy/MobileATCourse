@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -20,29 +21,31 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
+    public WebElement waitForElementPresent(String locator, String errorMessage, long timeoutInSeconds) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public WebElement waitForElementPresent(By by, String errorMessage) {
-        return waitForElementPresent(by, errorMessage, 5);
+    public WebElement waitForElementPresent(String locator, String errorMessage) {
+        return waitForElementPresent(locator, errorMessage, 5);
     }
 
-    public WebElement waitForElementAndClick(By by, String errorMessage, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+    public WebElement waitForElementAndClick(String locator, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         element.click();
         return element;
     }
 
-    public WebElement waitForElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+    public WebElement waitForElementAndSendKeys(String locator, String value, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
 
-    public boolean waitForElementNotPresent(By by, String errorMessage, long timeoutInSeconds) {
+    public boolean waitForElementNotPresent(String locator, String errorMessage, long timeoutInSeconds) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
@@ -61,20 +64,21 @@ public class MainPageObject {
         swipeUp(500);
     }
 
-    public void swipeUpToFindElement(By by, String errorMessage, int maxSwipes) {
+    public void swipeUpToFindElement(String locator, String errorMessage, int maxSwipes) {
+        By by = this.getLocatorByString(locator);
         int alreadySwiped = 0;
         while (driver.findElements(by).size() == 0) {
             swipeUpQuick();
             alreadySwiped++;
             if (alreadySwiped > maxSwipes) {
-                waitForElementPresent(by, "Cannot find element by swiping up \n" + errorMessage, 0);
+                waitForElementPresent(locator, "Cannot find element by swiping up \n" + errorMessage, 0);
                 return;
             }
         }
     }
 
-    public void swipeElementToTheLeft(By by, String errorMessage) {
-        WebElement element = waitForElementPresent(by, errorMessage, 10);
+    public void swipeElementToTheLeft(String locator, String errorMessage) {
+        WebElement element = waitForElementPresent(locator, errorMessage, 10);
         int xLeft = element.getLocation().getX();
         int xRight = xLeft + element.getSize().getWidth();
         int yUpper = element.getLocation().getY();
@@ -89,32 +93,40 @@ public class MainPageObject {
                 .perform();
     }
 
-    public int getAmountOfElements(By by) {
+    public int getAmountOfElements(String locator) {
+        By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         return elements.size();
     }
 
-    public void assertElementNotPresent(By by, String errorMessage) {
-        String defaultMessage = "An element " + by.toString() + " supposed to be not present";
-        int elementsAmount = getAmountOfElements(by);
+    public void assertElementNotPresent(String locator, String errorMessage) {
+        String defaultMessage = "An element " + locator + " supposed to be not present";
+        int elementsAmount = getAmountOfElements(locator);
         if (elementsAmount > 0) {
             throw new AssertionError(defaultMessage + " " + errorMessage);
         }
     }
 
-    public void assertElementPresent(By by, String errorMessage) {
+    public void assertElementPresent(String locator, String errorMessage) {
+        By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         assertTrue(errorMessage, elements.size() > 0);
     }
 
-    public String waitForElementAndGetAttribute(By by, String attribute, String errorMessage, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+    public String waitForElementAndGetAttribute(String locator, String attribute, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         return element.getAttribute(attribute);
     }
 
-    public void clickSkipButton() {
-        this.waitForElementAndClick(By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find 'Skip' button",
-                5);
+    public By getLocatorByString(String locatorWithType) {
+        String[] explodedLocator = locatorWithType.split(Pattern.quote(":"), 2);
+        String byType = explodedLocator[0];
+        String locator = explodedLocator[1];
+        if (byType.equals("xpath")) {
+            return By.xpath(locator);
+        } if (byType.equals("id")) {
+            return By.id(locator);
+        } else
+            throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locatorWithType);
     }
 }

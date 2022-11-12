@@ -1,10 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import org.junit.Test;
 
 public class Ex5 extends CoreTestCase {
@@ -15,7 +12,7 @@ public class Ex5 extends CoreTestCase {
         String article1Title = "Java (programming language)";
         String article2Title = "JavaScript";
         String listName = "Ex5";
-        mainPageObject.clickSkipButton();
+        new WelcomePageObject(driver).clickSkipButton();
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
