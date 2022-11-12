@@ -3,14 +3,14 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
-    private static final String TITLE_ELEMENT = "xpath://*[@resource-id = 'pcs-edit-section-title-description']/preceding-sibling::*[@content-desc]",
-            FOOTER_ELEMENT = "xpath://*[@content-desc = 'View article in browser']",
-            SAVE_BUTTON = "xpath://*[@content-desc = 'Save']",
-            ADD_TO_MY_LIST_BUTTON = "xpath://*[@text = 'ADD TO LIST']",
-            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
-            MY_LIST_OK_BUTTON = "xpath://*[@text = 'OK']";
+    protected static String TITLE_ELEMENT,
+            FOOTER_ELEMENT,
+            SAVE_BUTTON,
+            ADD_TO_MY_LIST_BUTTON,
+            MY_LIST_NAME_INPUT,
+            MY_LIST_OK_BUTTON;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -23,7 +23,7 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public void swipeToTheFooter() {
-        this.swipeUpToFindElement(FOOTER_ELEMENT, "Cannot find the end of article", 20);
+        this.swipeUpTillElementAppers(FOOTER_ELEMENT, "Cannot find the end of article", 40);
     }
 
     public String getArticleTitle() {

@@ -2,10 +2,10 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class NavigationUI extends MainPageObject {
+abstract public class NavigationUI extends MainPageObject {
 
-    private static final String VIEW_LIST_LINK = "xpath://*[@text = 'VIEW LIST']";
-    private static final String NAVIGATE_UP = "id:Navigate up";
+    protected static String VIEW_LIST_LINK;
+    protected static String NAVIGATE_UP;
 
     public NavigationUI(AppiumDriver driver) {
         super(driver);

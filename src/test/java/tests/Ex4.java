@@ -1,7 +1,6 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.WelcomePageObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -16,7 +15,6 @@ public class Ex4 extends CoreTestCase {
     @Test
     public void testFindWordInSearchResults() {
         String searchText = "Java";
-        new WelcomePageObject(driver).clickSkipButton();
         mainPageObject.waitForElementAndClick("id:org.wikipedia:id/search_container",
                 "Cannot find init search field",
                 5);

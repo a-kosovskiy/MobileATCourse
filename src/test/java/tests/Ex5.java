@@ -1,7 +1,14 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.*;
+import lib.ui.ArticlePageObject;
+import lib.ui.MyListsPageObject;
+import lib.ui.NavigationUI;
+import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.MyListsPageObjectFactory;
+import lib.ui.factories.NavigationUIFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class Ex5 extends CoreTestCase {
@@ -12,21 +19,20 @@ public class Ex5 extends CoreTestCase {
         String article1Title = "Java (programming language)";
         String article2Title = "JavaScript";
         String listName = "Ex5";
-        new WelcomePageObject(driver).clickSkipButton();
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
         searchPageObject.clickByArticleWithSubstring(article1Title);
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForTitleElement();
         articlePageObject.addArticleToNewList(listName);
-        NavigationUI navigationUI = new NavigationUI(driver);
+        NavigationUI navigationUI = NavigationUIFactory.get(driver);
         navigationUI.navigateUp();
         searchPageObject.clickByArticleWithSubstring(article2Title);
         articlePageObject.waitForTitleElement();
         articlePageObject.addArticleToList(listName);
         navigationUI.viewList();
-        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+        MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
         myListsPageObject.swipeByArticleToDelete(article1Title);
         myListsPageObject.waitForArticleToAppearByTitle(article2Title);
         myListsPageObject.clickByArticleWithTitle(article2Title);

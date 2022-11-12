@@ -2,9 +2,9 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class MyListsPageObject extends MainPageObject {
+abstract public class MyListsPageObject extends MainPageObject {
 
-    private static final String ARTICLE_BY_TITLE_TPL = "xpath://*[@resource-id = 'org.wikipedia:id/page_list_item_title' and @text = '{TITLE}']";
+    protected static String ARTICLE_BY_TITLE_TPL;
 
     public MyListsPageObject(AppiumDriver driver) {
         super(driver);
