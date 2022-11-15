@@ -8,11 +8,12 @@ import org.junit.Test;
 public class SearchTests extends CoreTestCase {
 
     @Test
-    public void testSearch() {
+    public void testSearch() throws Exception {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
+        Thread.sleep(5000);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
-        searchPageObject.waitForSearchResult("Object-oriented programming language");
+        searchPageObject.waitForSearchResult("bject-oriented programming language");
     }
 
     @Test

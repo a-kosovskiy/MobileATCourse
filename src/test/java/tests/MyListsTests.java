@@ -1,10 +1,8 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.Platform;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
@@ -12,6 +10,7 @@ import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
+    private static final String login = "AKosovskiy", password = "CS7qNaBY";
 
     @Test
     public void testSaveFirstArticleToMyList() {
@@ -20,14 +19,33 @@ public class MyListsTests extends CoreTestCase {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        searchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
 
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForTitleElement();
-        articlePageObject.addArticleToNewList(listName);
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToNewList(listName);
+        } else {
+            articlePageObject.addArticleToMySaved();
+        }
+
+        if (Platform.getInstance().isMobileWeb()) {
+            AuthorizationPageObject authPage = new AuthorizationPageObject(driver);
+            authPage.clickAuthButton();
+            authPage.enterLoginData(login, password);
+            authPage.submitForm();
+            articlePageObject.waitForTitleElement();
+            assertEquals("We are not on the same page after login", articleTitle, articlePageObject.getArticleTitle());
+            articlePageObject.addArticleToMySaved();
+        }
 
         NavigationUI navigationUI = NavigationUIFactory.get(driver);
-        navigationUI.viewList();
+        if (Platform.getInstance().isAndroid()) {
+            navigationUI.viewList();
+        } else if (Platform.getInstance().isMobileWeb()) {
+            navigationUI.openNavigation();
+            navigationUI.clickMyLists();
+        }
 
         MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
         myListsPageObject.swipeByArticleToDelete(articleTitle);

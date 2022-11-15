@@ -2,8 +2,8 @@ package lesson1.tests;
 
 public class MainClass {
 
-    private int class_number = 20;
-    private String class_string = "Hello, world";
+    private final int class_number = 20;
+    private final String class_string = "Hello, world";
 
     public int getLocalNumber() {
         return 14;

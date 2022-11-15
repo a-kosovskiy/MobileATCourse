@@ -2,10 +2,13 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,9 +19,9 @@ import static junit.framework.TestCase.assertTrue;
 
 public class MainPageObject {
 
-    protected AppiumDriver driver;
+    protected RemoteWebDriver driver;
 
-    public MainPageObject(AppiumDriver driver) {
+    public MainPageObject(RemoteWebDriver driver) {
         this.driver = driver;
     }
 
@@ -53,12 +56,16 @@ public class MainPageObject {
     }
 
     protected void swipeUp(int timeOfSwipe) {
-        TouchAction action = new TouchAction(driver);
-        Dimension size = driver.manage().window().getSize();
-        int x = size.width / 2;
-        int yStart = (int) (size.height * 0.8);
-        int yEnd = (int) (size.height * 0.2);
-        action.press(x, yStart).waitAction(timeOfSwipe).moveTo(x, yEnd).release().perform();
+        if (driver instanceof AppiumDriver) {
+            AppiumDriver driver = (AppiumDriver) this.driver;
+            TouchAction action = new TouchAction(driver);
+            Dimension size = driver.manage().window().getSize();
+            int x = size.width / 2;
+            int yStart = (int) (size.height * 0.8);
+            int yEnd = (int) (size.height * 0.2);
+            action.press(x, yStart).waitAction(timeOfSwipe).moveTo(x, yEnd).release().perform();
+        } else
+            System.out.println("Method swipeUp() does nothing for platform " + Platform.getInstance().getPlatformVar());
     }
 
     protected void swipeUpQuick() {
@@ -82,6 +89,11 @@ public class MainPageObject {
         int elementLocationByY = this.waitForElementPresent(locator, "Cannot find element by locator", 1)
                 .getLocation()
                 .getY();
+        if (Platform.getInstance().isMobileWeb()) {
+            JavascriptExecutor jsExecutor = driver;
+            Object jsResult = jsExecutor.executeScript("return window.pageYOffset");
+            elementLocationByY -= Integer.parseInt(jsResult.toString());
+        }
         int screenSizeByY = driver.manage().window().getSize().getHeight();
         return elementLocationByY < screenSizeByY;
     }
@@ -100,25 +112,32 @@ public class MainPageObject {
     }
 
     public void swipeElementToTheLeft(String locator, String errorMessage) {
-        WebElement element = waitForElementPresent(locator, errorMessage, 10);
-        int xLeft = element.getLocation().getX();
-        int xRight = xLeft + element.getSize().getWidth();
-        int yUpper = element.getLocation().getY();
-        int yLower = yUpper + element.getSize().getHeight();
-        int yMiddle = (yUpper + yLower) / 2;
-
-        TouchAction action = new TouchAction(driver);
-        action.press(xRight, yMiddle)
-                .waitAction(300)
-                .moveTo(xLeft, yMiddle)
-                .release()
-                .perform();
+        if (driver instanceof AppiumDriver) {
+            AppiumDriver driver = (AppiumDriver) this.driver;
+            WebElement element = waitForElementPresent(locator, errorMessage, 10);
+            int xLeft = element.getLocation().getX();
+            int xRight = xLeft + element.getSize().getWidth();
+            int yUpper = element.getLocation().getY();
+            int yLower = yUpper + element.getSize().getHeight();
+            int yMiddle = (yUpper + yLower) / 2;
+            TouchAction action = new TouchAction(driver);
+            action.press(xRight, yMiddle)
+                    .waitAction(300)
+                    .moveTo(xLeft, yMiddle)
+                    .release()
+                    .perform();
+        } else
+            System.out.println("Method swipeElementToTheLeft() does nothing for platform " + Platform.getInstance().getPlatformVar());
     }
 
     public int getAmountOfElements(String locator) {
         By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         return elements.size();
+    }
+
+    public boolean isElementPresent(String locator) {
+        return getAmountOfElements(locator) > 0;
     }
 
     public void assertElementNotPresent(String locator, String errorMessage) {
@@ -146,10 +165,54 @@ public class MainPageObject {
         String locator = explodedLocator[1];
         if (byType.equals("xpath")) {
             return By.xpath(locator);
-        }
-        if (byType.equals("id")) {
+        } else if (byType.equals("id")) {
             return By.id(locator);
-        } else
+        } else if (byType.equals("css")) {
+            return By.cssSelector(locator);
+        } else {
             throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locatorWithType);
+        }
+    }
+
+    public void scrollWebPage() {
+        if (Platform.getInstance().isMobileWeb()) {
+            JavascriptExecutor jsExecutor = driver;
+            jsExecutor.executeScript("window.scrollBy(0,250)");
+        } else
+            System.out.println("Method scrollWebPage() does nothing for platform " + Platform.getInstance().getPlatformVar());
+    }
+
+    public void scrollWebPageTillElementNotVisible(String locator, String errorMessage, int maxSwipes) {
+        int alreadySwiped = 0;
+        WebElement element = this.waitForElementPresent(locator, errorMessage);
+        while (!this.isElementLocatedOnTheScreen(locator)) {
+            scrollWebPage();
+            ++alreadySwiped;
+            if (alreadySwiped > maxSwipes) {
+                Assert.assertTrue(errorMessage, element.isDisplayed());
+            }
+        }
+        if (Platform.getInstance().isMobileWeb()) {
+            JavascriptExecutor jsExecutor = driver;
+            jsExecutor.executeScript("window.scrollBy(0,250)");
+        } else
+            System.out.println("Method scrollWebPage() does nothing for platform " + Platform.getInstance().getPlatformVar());
+    }
+
+    public void tryClickElementWithFewAttempts(String locator, String errorMessage, int maxAttempts) {
+        int currentAttempts = 0;
+        boolean needMoreAttempts = true;
+
+        while (needMoreAttempts) {
+            try {
+                this.waitForElementAndClick(locator, errorMessage, 1);
+                needMoreAttempts = false;
+            } catch (Exception e) {
+                if (currentAttempts > maxAttempts) {
+                    this.waitForElementAndClick(locator, errorMessage, 1);
+                }
+            }
+            ++currentAttempts;
+        }
     }
 }

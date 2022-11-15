@@ -1,12 +1,12 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class WelcomePageObject extends MainPageObject {
 
     private static final String SKIP_BUTTON = "id:org.wikipedia:id/fragment_onboarding_skip_button";
 
-    public WelcomePageObject(AppiumDriver driver) {
+    public WelcomePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

@@ -1,7 +1,8 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 abstract public class ArticlePageObject extends MainPageObject {
 
@@ -10,9 +11,10 @@ abstract public class ArticlePageObject extends MainPageObject {
             SAVE_BUTTON,
             ADD_TO_MY_LIST_BUTTON,
             MY_LIST_NAME_INPUT,
-            MY_LIST_OK_BUTTON;
+            MY_LIST_OK_BUTTON,
+            REMOVE_FROM_MY_LIST_BUTTON;
 
-    public ArticlePageObject(AppiumDriver driver) {
+    public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
@@ -23,12 +25,21 @@ abstract public class ArticlePageObject extends MainPageObject {
     }
 
     public void swipeToTheFooter() {
-        this.swipeUpTillElementAppers(FOOTER_ELEMENT, "Cannot find the end of article", 40);
+        String errorMessage = "Cannot find the end of article";
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpTillElementAppers(FOOTER_ELEMENT, errorMessage, 40);
+        } else {
+            this.scrollWebPageTillElementNotVisible(FOOTER_ELEMENT, errorMessage, 40);
+        }
+
     }
 
     public String getArticleTitle() {
         WebElement titleElement = waitForTitleElement();
-        return titleElement.getAttribute("name");
+        if (Platform.getInstance().isAndroid()) {
+            return titleElement.getAttribute("name");
+        } else
+            return titleElement.getText();
     }
 
     public void addArticleToNewList(String listName) {
@@ -65,5 +76,21 @@ abstract public class ArticlePageObject extends MainPageObject {
 
     public void assertTitlePresent() {
         this.assertElementPresent(TITLE_ELEMENT, "Cannot find title element");
+    }
+
+    public void addArticleToMySaved() {
+        if (Platform.getInstance().isMobileWeb()) {
+            this.removeArticleFromSavedIfItWasAdded();
+        }
+        this.waitForElementAndClick(ADD_TO_MY_LIST_BUTTON, "Cannot find button to add article to saved list", 5);
+    }
+
+    public void removeArticleFromSavedIfItWasAdded() {
+        if (this.isElementPresent(REMOVE_FROM_MY_LIST_BUTTON)) {
+            this.waitForElementAndClick(REMOVE_FROM_MY_LIST_BUTTON,
+                    "Cannot click button to remove an article from saved", 1);
+        }
+        this.waitForElementPresent(ADD_TO_MY_LIST_BUTTON,
+                "Cannot find button to add article to saved list after removing it from this list before");
     }
 }
