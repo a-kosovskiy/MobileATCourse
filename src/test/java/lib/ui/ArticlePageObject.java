@@ -93,4 +93,9 @@ abstract public class ArticlePageObject extends MainPageObject {
         this.waitForElementPresent(ADD_TO_MY_LIST_BUTTON,
                 "Cannot find button to add article to saved list after removing it from this list before");
     }
+
+    public void checkArticleIsSavedToMyList() {
+        this.waitForElementPresent(REMOVE_FROM_MY_LIST_BUTTON, "Cannot find 'Remove from my list' button",
+                5);
+    }
 }

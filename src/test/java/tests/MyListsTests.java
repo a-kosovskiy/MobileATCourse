@@ -10,7 +10,6 @@ import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
-    private static final String login = "AKosovskiy", password = "CS7qNaBY";
 
     @Test
     public void testSaveFirstArticleToMyList() {
@@ -32,7 +31,7 @@ public class MyListsTests extends CoreTestCase {
         if (Platform.getInstance().isMobileWeb()) {
             AuthorizationPageObject authPage = new AuthorizationPageObject(driver);
             authPage.clickAuthButton();
-            authPage.enterLoginData(login, password);
+            authPage.enterLoginData();
             authPage.submitForm();
             articlePageObject.waitForTitleElement();
             assertEquals("We are not on the same page after login", articleTitle, articlePageObject.getArticleTitle());
