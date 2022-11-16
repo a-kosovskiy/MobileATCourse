@@ -1,5 +1,7 @@
 package tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.junit4.DisplayName;
 import lib.CoreTestCase;
 import lib.Platform;
 import lib.ui.*;
@@ -10,9 +12,15 @@ import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+@Epic("Tests for articles")
 public class Ex5 extends CoreTestCase {
 
     @Test
+    @Features({@Feature("Search"), @Feature("Article"), @Feature("Watchlist")})
+    @DisplayName("Save two articles")
+    @Description("Save two article to watchlist and delete one article")
+    @Step("Starting test testSaveTwoArticles")
+    @Severity(SeverityLevel.NORMAL)
     public void testSaveTwoArticles() {
         String searchLine = "Java";
         String article1Title = "Java (programming language)";

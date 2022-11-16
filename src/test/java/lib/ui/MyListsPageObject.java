@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -11,18 +12,22 @@ abstract public class MyListsPageObject extends MainPageObject {
         super(driver);
     }
 
+    @Step("Get saved article xpath by title '{articleTitle}'")
     private static String getSavedArticleXpathByTitle(String articleTitle) {
         return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", articleTitle);
     }
 
+    @Step("Get 'remove' button xpath by title '{articleTitle}'")
     private static String getRemoveButtonByTitle(String articleTitle) {
         return REMOVE_FROM_SAVED_BUTTON.replace("{TITLE}", articleTitle);
     }
 
+    @Step("Get 'add' button xpath by title '{articleTitle}'")
     private static String getAddButtonByTitle(String articleTitle) {
         return ADD_TO_SAVED_BUTTON.replace("{TITLE}", articleTitle);
     }
 
+    @Step("Swipe article to delete by title '{articleTitle}'")
     public void swipeByArticleToDelete(String articleTitle) {
         this.waitForArticleToAppearByTitle(articleTitle);
         if (Platform.getInstance().isAndroid()) {
@@ -43,18 +48,21 @@ abstract public class MyListsPageObject extends MainPageObject {
         this.waitForArticleToDisappearByTitle(articleTitle);
     }
 
+    @Step("Wait for article with title '{articleTitle}' to appear")
     public void waitForArticleToAppearByTitle(String articleTitle) {
         this.waitForElementPresent(getSavedArticleXpathByTitle(articleTitle),
                 "Cannot find saved article by title " + articleTitle,
                 15);
     }
 
+    @Step("Wait for article with title '{articleTitle}' to disappear")
     public void waitForArticleToDisappearByTitle(String articleTitle) {
         this.waitForElementNotPresent(getSavedArticleXpathByTitle(articleTitle),
                 "Saved article still present with title " + articleTitle,
                 15);
     }
 
+    @Step("Click by article with title '{articleTitle}'")
     public void clickByArticleWithTitle(String articleTitle) {
         this.waitForElementAndClick(getSavedArticleXpathByTitle(articleTitle),
                 "Cannot open article",

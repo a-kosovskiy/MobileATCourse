@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -14,18 +15,21 @@ abstract public class NavigationUI extends MainPageObject {
         super(driver);
     }
 
+    @Step("Click 'View list' button")
     public void viewList() {
         this.waitForElementAndClick(VIEW_LIST_LINK,
                 "Cannot press 'View list' button",
                 5);
     }
 
+    @Step("Click 'Navigate up' button")
     public void navigateUp() {
         this.waitForElementAndClick(NAVIGATE_UP,
                 "Cannot find and click 'Navigate up' button",
                 5);
     }
 
+    @Step("Click 'Open navigation' button (not supported for android and ios)")
     public void openNavigation() {
         if (Platform.getInstance().isMobileWeb()) {
             this.waitForElementAndClick(OPEN_NAVIGATION, "Cannot find and click 'Open navigation' button", 5);
@@ -34,6 +38,7 @@ abstract public class NavigationUI extends MainPageObject {
         }
     }
 
+    @Step("Open Watchlist (not supported for android and ios)")
     public void clickMyLists() {
         if (Platform.getInstance().isMobileWeb()) {
             this.tryClickElementWithFewAttempts(MY_LISTS_LINK, "Cannot find navigation button to My list", 10);
