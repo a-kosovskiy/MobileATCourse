@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,12 +19,14 @@ abstract public class ArticlePageObject extends MainPageObject {
         super(driver);
     }
 
+    @Step("Wait for title element on article page")
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(TITLE_ELEMENT,
                 "Cannot find article title on page",
                 15);
     }
 
+    @Step("Swipe to the footer")
     public void swipeToTheFooter() {
         String errorMessage = "Cannot find the end of article";
         if (Platform.getInstance().isAndroid()) {
@@ -34,8 +37,10 @@ abstract public class ArticlePageObject extends MainPageObject {
 
     }
 
+    @Step("Get article title")
     public String getArticleTitle() {
         WebElement titleElement = waitForTitleElement();
+        screenshot(this.takeScreenshot("article_title"));
         if (Platform.getInstance().isAndroid()) {
             return titleElement.getAttribute("name");
         } else
@@ -60,6 +65,7 @@ abstract public class ArticlePageObject extends MainPageObject {
                 5);
     }
 
+    @Step("Add article to my list")
     public void addArticleToList(String listName) {
         this.waitForElementAndClick(SAVE_BUTTON,
                 "Cannot find 'Save' button",
@@ -74,10 +80,12 @@ abstract public class ArticlePageObject extends MainPageObject {
                 5);
     }
 
+    @Step("Assert there is title element on article page")
     public void assertTitlePresent() {
         this.assertElementPresent(TITLE_ELEMENT, "Cannot find title element");
     }
 
+    @Step("Add article to my saved articles")
     public void addArticleToMySaved() {
         if (Platform.getInstance().isMobileWeb()) {
             this.removeArticleFromSavedIfItWasAdded();
@@ -85,6 +93,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(ADD_TO_MY_LIST_BUTTON, "Cannot find button to add article to saved list", 5);
     }
 
+    @Step("Remove article from saved if it was saved")
     public void removeArticleFromSavedIfItWasAdded() {
         if (this.isElementPresent(REMOVE_FROM_MY_LIST_BUTTON)) {
             this.waitForElementAndClick(REMOVE_FROM_MY_LIST_BUTTON,
@@ -94,6 +103,7 @@ abstract public class ArticlePageObject extends MainPageObject {
                 "Cannot find button to add article to saved list after removing it from this list before");
     }
 
+    @Step("Check article is added to saved")
     public void checkArticleIsSavedToMyList() {
         this.waitForElementPresent(REMOVE_FROM_MY_LIST_BUTTON, "Cannot find 'Remove from my list' button",
                 5);

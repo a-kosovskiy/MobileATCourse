@@ -1,26 +1,25 @@
 package lesson1.tests;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 public class MainClassTest {
 
     @Test
     public void testGetLocalNumber() {
-        Assertions.assertEquals(14, new MainClass().getLocalNumber(),
-                "getLocalNumber возвращает значение 14");
+        Assert.assertEquals("getLocalNumber возвращает значение 14", 14, new MainClass().getLocalNumber());
     }
 
     @Test
     public void testGetClassNumber() {
-        Assertions.assertTrue(new MainClass().getClassNumber() > 45,
-                "getClassNumber возвращает значение больше 45");
+        Assert.assertTrue("getClassNumber возвращает значение больше 45", new MainClass().getClassNumber() > 45);
     }
 
     @Test
     public void testGetClassString() {
         String actualString = new MainClass().getClassString();
-        Assertions.assertTrue(actualString.contains("hello") || actualString.contains("Hello"),
-                "getClassString возвращает строку содержащую hello или Hello");
+        Assert.assertTrue("getClassString возвращает строку содержащую hello или Hello",
+                actualString.contains("hello") || actualString.contains("Hello"));
     }
 }

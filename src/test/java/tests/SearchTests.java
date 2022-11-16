@@ -3,6 +3,7 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SearchTests extends CoreTestCase {
@@ -32,7 +33,7 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
-        assertTrue("We found no results", searchPageObject.getAmountOfFoundArticles() > 0);
+        Assert.assertTrue("We found no results", searchPageObject.getAmountOfFoundArticles() > 0);
     }
 
     @Test

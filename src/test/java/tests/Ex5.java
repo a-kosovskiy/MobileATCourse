@@ -7,6 +7,7 @@ import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class Ex5 extends CoreTestCase {
@@ -34,7 +35,7 @@ public class Ex5 extends CoreTestCase {
             authPage.enterLoginData();
             authPage.submitForm();
             articlePageObject.waitForTitleElement();
-            assertEquals("We are not on the same page after login", article1Title, articlePageObject.getArticleTitle());
+            Assert.assertEquals("We are not on the same page after login", article1Title, articlePageObject.getArticleTitle());
             articlePageObject.checkArticleIsSavedToMyList();
         }
 
@@ -62,7 +63,7 @@ public class Ex5 extends CoreTestCase {
         myListsPageObject.waitForArticleToAppearByTitle(article2Title);
         myListsPageObject.clickByArticleWithTitle(article2Title);
         articlePageObject.waitForTitleElement();
-        assertEquals("Article title is correct", article2Title, articlePageObject.getArticleTitle());
+        Assert.assertEquals("Article title is correct", article2Title, articlePageObject.getArticleTitle());
         if (Platform.getInstance().isMobileWeb()) {
             articlePageObject.checkArticleIsSavedToMyList();
         }
